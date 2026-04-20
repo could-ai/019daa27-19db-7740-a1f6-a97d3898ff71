@@ -1,123 +1,372 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const FlipkartCloneApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FlipkartCloneApp extends StatelessWidget {
+  const FlipkartCloneApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
+      title: 'Flipkart Clone',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primaryColor: const Color(0xFF2874F0),
+        scaffoldBackgroundColor: Colors.grey[200],
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF2874F0),
+          foregroundColor: Colors.white,
+        ),
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
-      },
+      home: const MainScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MainScreenState extends State<MainScreen> {
+  int _currentIndex = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  final List<Widget> _pages = [
+    const HomeScreen(),
+    const Center(child: Text('Categories')),
+    const Center(child: Text('Notifications')),
+    const Center(child: Text('Account')),
+    const Center(child: Text('Cart')),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    return Scaffold(
+      body: _pages[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        selectedItemColor: const Color(0xFF2874F0),
+        unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Categories'),
+          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Notifications'),
+          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account'),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: 'Cart'),
+        ],
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Row(
+          children: [
+            const Text(
+              'Flipkart',
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Image.network(
+              'https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/plus-brand-bc165b.svg',
+              height: 20,
+              errorBuilder: (context, error, stackTrace) => const SizedBox(),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.mic),
+            onPressed: () {},
+          ),
+        ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: SingleChildScrollView(
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text('$_counter', style: Theme.of(context).textTheme.headlineMedium),
+          children: [
+            // Search Bar 
+            Container(
+              color: const Color(0xFF2874F0),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              child: Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Icon(Icons.search, color: Colors.grey),
+                    ),
+                    const Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Search for products, brands and more',
+                          border: InputBorder.none,
+                          isDense: true,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      color: Colors.grey[200],
+                      child: const Center(
+                        child: Icon(Icons.mic, color: Colors.grey),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            const CategoriesRow(),
+            const SizedBox(height: 8),
+            const BannerSlider(),
+            const SizedBox(height: 8),
+            const ProductHorizontalList(title: 'Recently Viewed'),
+            const SizedBox(height: 8),
+            const ProductGrid(title: 'Suggested for You'),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class CategoriesRow extends StatelessWidget {
+  const CategoriesRow({super.key});
+
+  final List<Map<String, dynamic>> categories = const [
+    {'icon': Icons.local_offer, 'name': 'Offers'},
+    {'icon': Icons.phone_android, 'name': 'Mobiles'},
+    {'icon': Icons.watch, 'name': 'Fashion'},
+    {'icon': Icons.tv, 'name': 'Electronics'},
+    {'icon': Icons.home, 'name': 'Home'},
+    {'icon': Icons.flight, 'name': 'Travel'},
+    {'icon': Icons.face, 'name': 'Beauty'},
+    {'icon': Icons.toys, 'name': 'Toys'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      height: 100,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Column(
+              children: [
+                CircleAvatar(
+                  radius: 24,
+                  backgroundColor: Colors.blue[50],
+                  child: Icon(
+                    categories[index]['icon'],
+                    color: Colors.blue[800],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  categories[index]['name'],
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class BannerSlider extends StatelessWidget {
+  const BannerSlider({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150,
+      color: Colors.white,
+      child: PageView(
+        children: [
+          Container(color: Colors.blue[300], child: const Center(child: Text('Sale Banner 1', style: TextStyle(color: Colors.white, fontSize: 20)))),
+          Container(color: Colors.green[300], child: const Center(child: Text('Sale Banner 2', style: TextStyle(color: Colors.white, fontSize: 20)))),
+          Container(color: Colors.red[300], child: const Center(child: Text('Sale Banner 3', style: TextStyle(color: Colors.white, fontSize: 20)))),
+        ],
+      ),
+    );
+  }
+}
+
+class ProductHorizontalList extends StatelessWidget {
+  final String title;
+  const ProductHorizontalList({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: const BoxDecoration(
+                  color: Color(0xFF2874F0),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.white),
+              )
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 180,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return Container(
+                  width: 120,
+                  margin: const EdgeInsets.only(right: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[200]!),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.phone_iphone, size: 64, color: Colors.grey[600]),
+                        ),
+                      ),
+                      const Text('Smartphone', style: TextStyle(fontWeight: FontWeight.w500)),
+                      const SizedBox(height: 4),
+                      const Text('From ₹9,999', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                    ],
+                  ),
+                );
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class ProductGrid extends StatelessWidget {
+  final String title;
+  const ProductGrid({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 0.8,
+            ),
+            itemCount: 4,
+            itemBuilder: (context, index) {
+              return Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey[200]!),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: Icon(Icons.laptop_mac, size: 64, color: Colors.grey[600]),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Gaming Laptop', maxLines: 1, overflow: TextOverflow.ellipsis),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                                child: const Row(
+                                  children: [
+                                    Text('4.5', style: TextStyle(color: Colors.white, fontSize: 10)),
+                                    Icon(Icons.star, color: Colors.white, size: 10),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Text('(1,234)', style: TextStyle(color: Colors.grey, fontSize: 10)),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          const Text('₹54,990', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
